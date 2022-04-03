@@ -1,0 +1,27 @@
+{% extends 'news/default.html' %}
+
+{% block title %}
+Posts
+{% endblock title %}
+
+{% block content %}
+<h1>All posts:</h1>
+<table>
+    <tr>
+        <td>Title of the post</td>
+        <td></td>
+        <td>Date of publication</td>
+        <td></td>
+        <td>Preview</td>
+    </tr>
+{% for post in posts %}
+    <tr>
+        <td>{{ post.head }}</td>
+        <td></td>
+        <td>{{ post.creationTime }}</td>
+        <td></td>
+        <td>{{ post.text|truncatechars:20}}</td>
+    </tr>
+{% endfor %}
+</table>
+{% endblock content %}
