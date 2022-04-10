@@ -7,6 +7,9 @@ class Author(models.Model):
     authorAccount = models.OneToOneField(User, on_delete=models.CASCADE)
     authorRating = models.IntegerField(default=0)
 
+    def __str__(self):
+        return f'{self.authorAccount.username}'
+
     def update_rating(self):
         post_rat = self.post_set.aggregate(postRating=Sum('postRating'))
         prat = 0
@@ -23,7 +26,6 @@ class Author(models.Model):
             for c in p_comments:
                 pcrat += c.commentRating
 
-
         self.authorRating = prat * 3 + crat + pcrat
         self.save()
 
@@ -31,13 +33,16 @@ class Author(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=32, unique=True)
 
+    def __str__(self):
+        return f'{self.name}'
+
 
 class Post(models.Model):
     ARTICLE = 'A'
     NEWS = 'N'
     CHOICES = [
-        (ARTICLE, 'Статья'),
-        (NEWS, 'Новости'),
+        (ARTICLE, 'Article'),
+        (NEWS, 'News'),
     ]
 
     nameCategory = models.CharField(max_length=1, choices=CHOICES, default=NEWS)
@@ -48,6 +53,9 @@ class Post(models.Model):
 
     postAuthor = models.ForeignKey(Author, on_delete=models.CASCADE)
     postCategory = models.ManyToManyField(Category, through='PostCategory')
+
+    def get_absolute_url(self):
+        return f'/posts/{self.pk}'
 
     def like(self):
         self.postRating += 1
